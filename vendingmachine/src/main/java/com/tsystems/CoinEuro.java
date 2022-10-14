@@ -1,4 +1,7 @@
+package com.tsystems;
+
 import java.util.ArrayList;
+import java.util.Collections;
 
 
 public enum CoinEuro { // En céntimos
@@ -22,6 +25,7 @@ public enum CoinEuro { // En céntimos
         return value;
     }
 
+
     public static CoinEuro fromValue(int value) {
         for (CoinEuro e : CoinEuro.values()) {
             if (e.getValue() == value) {
@@ -30,6 +34,7 @@ public enum CoinEuro { // En céntimos
         }
         throw new IllegalArgumentException("Invalid value: " + value);
     }
+
 
     public static ArrayList<CoinEuro> fromString (String coinsString) {
         // Monedas separadas por comas o individualmente
@@ -45,6 +50,7 @@ public enum CoinEuro { // En céntimos
         return coins;
     }
 
+
     public static int sum (ArrayList<CoinEuro> coins) {
         int total = 0;
         for (CoinEuro coin: coins) {
@@ -52,5 +58,31 @@ public enum CoinEuro { // En céntimos
         }
 
         return total;
+    }
+
+
+    public static ArrayList<CoinEuro> change (int total) {
+        ArrayList<Integer> acceptedValues = new ArrayList<>();
+
+        for (CoinEuro coin : CoinEuro.values()) {
+            acceptedValues.add(coin.getValue());
+        }
+
+        ArrayList<CoinEuro> change = new ArrayList<CoinEuro>();
+        int remaining = total;
+
+        while (remaining > 0) {
+            int max = Collections.max(acceptedValues);
+
+            if (max <= remaining) {
+                change.add(CoinEuro.fromValue(max));
+                remaining -= max;
+            }
+            else {
+                acceptedValues.remove(Integer.valueOf(max));
+            }
+        }
+
+        return change;
     }
 }

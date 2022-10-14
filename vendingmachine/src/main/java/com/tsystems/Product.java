@@ -1,23 +1,28 @@
+package com.tsystems;
+
+import java.util.InputMismatchException;
+
 public enum Product {
-    PLUMBUS("Plumbus"),
-    WUMPA("Wumpa");
+    PLUMBUS(1),
+    WUMPA(2);
 
-    private final String name;
+    private final int value;
 
-    private Product(String name) {
-        this.name = name;
+    private Product(int value) {
+        this.value = value;
     }
 
-    public String getName() {
-        return name;
+    public int getValue() {
+        return value;
     }
 
-    public static Product fromName(String name) {
-        for (Product p : Product.values()) {
-            if (p.getName().equals(name)) {
-                return p;
+    public static Product fromValue(int value) {
+        for (Product option : Product.values()) {
+            if (option.getValue() == value) {
+                return option;
             }
         }
-        throw new IllegalArgumentException("Invalid name: " + name);
+
+        throw new InputMismatchException("Invalid option");
     }
 }

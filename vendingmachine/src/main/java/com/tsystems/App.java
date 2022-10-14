@@ -1,6 +1,5 @@
-import java.time.DateTimeException;
-import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
+package com.tsystems;
+
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -38,11 +37,9 @@ enum MenuOptions {
 
 
 public class App {
-
+    static VendingMachine vendingMachine = new VendingMachine();
 
     public static void main(String[] args) throws Exception {
-        System.out.print("¿¿¿A quién no le va a gustar un buen baptisterio???");
-
         var       option = MenuOptions.NOOP;
         Scanner   scan   = new Scanner(System.in);
         Exception error  = null;
@@ -74,7 +71,15 @@ public class App {
 
             switch (option) {
                 case BUY -> {
-
+                    try {
+                        buyProduct(scan);
+                    }
+                    catch (ArithmeticException e) {
+                        error = e;
+                    }
+                    catch (Exception e) {
+                        error = e;
+                    }
                 }
                 case EXIT   -> System.out.println("¡Hasta luego!");
                 case NOOP   -> {}
@@ -85,15 +90,35 @@ public class App {
     }
 
 
-    private static void book (Scanner scan) throws Exception, DateTimeException {
-        int round     = 0;
-        int remaining = baptisterio.PRICE;
-        ArrayList<CoinEuro> coins = new ArrayList<CoinEuro>();
+    private static void buyProduct (Scanner scan) throws Exception, InputMismatchException {
+        System.out.println("¿Qué producto quieres comprar?");
+        System.out.println("   1) Plumbus");
+        System.out.println("   2) Wumpa");
+        System.out.print("> ");
 
+        Product product = null;
+
+        do {
+            try {
+                System.out.print("> ");
+                product = Product.fromValue(scan.nextInt());
+                scan.nextLine();
+            }
+            catch (InputMismatchException e) {
+                throw new InputMismatchException("Introduce un comando válido.");
+            }
+        } while (product != Product.WUMPA && product != Product.PLUMBUS);
+
+
+        int round     = 0;
+        int price     = vendingMachine.getPrice(product);
+        int remaining = price;
+
+        ArrayList<CoinEuro> coins = new ArrayList<CoinEuro>();
 
         do {
             clearScreen();
-            System.out.println("Debes abonar " + baptisterio.PRICE + " céntimos.");
+            System.out.println("Debes abonar " + price + " céntimos.");
             System.out.println("Introduce las monedas en el sistema. Puedes separarlas por comas o introducirlas poco a poco");
             System.out.print(remaining + " céntimos restantes. \n> ");
 
@@ -113,7 +138,7 @@ public class App {
 
         System.out.println("Su pago se ha procesado correctamente");
 
-        Thread.sleep(2000);
+        Thread.sleep(3000);
     }
 
 

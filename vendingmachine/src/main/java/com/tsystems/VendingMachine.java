@@ -1,38 +1,36 @@
+package com.tsystems;
+
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class VendingMachine {
     private ArrayList<ProductInventory> products = new ArrayList<>();
+
 
     public VendingMachine() {
         products.add(new ProductInventory(Product.PLUMBUS, 3, 200));
         products.add(new ProductInventory(Product.WUMPA, 2, 100));
     }
 
-    public ArrayList<CoinEuro> buy (Product product, ArrayList<CoinEuro> coins) {
+
+    public ArrayList<CoinEuro> buy (Product product, ArrayList<CoinEuro> coins) throws ArithmeticException {
         var productInv = products.stream()
             .filter(p -> p.getProduct() == product)
             .findFirst()
             .get();
 
+        if (!productInv.decreaseStock()) {
+            throw new ArithmeticException("No hay suficiente stock para este producto");
+        }
+
         var paid = CoinEuro.sum(coins);
-        ArrayList<CoinEuro> change = new ArrayList<>();
 
         if (paid < productInv.getPrice()) {
-            // FIXME excepción
-        }
-        else if (paid > productInv.getPrice()) {
-            int difference = paid - productInv.getPrice();
-            change.add(CoinEuro.fromValue(difference));
-            // FIXME problema: monedas de 10 y monedas de 15.
+            throw new ArithmeticException("No hay suficiente dinero para pagar el producto");
         }
 
-        if (productInv.decreaseStock()) {
-            // FIXME exception?
-        }
-
-        return change;
+        return CoinEuro.change(paid - productInv.getPrice());
     }
+
 
     public boolean setStock(Product product, int stock) {
         var possibleProduct = products.stream()
@@ -45,7 +43,25 @@ public class VendingMachine {
 
         var productInv = possibleProduct.get();
 
-        productInv.setQuantity(stock);
+        productInv.setStock(stock);
         return true;
+    }
+
+    public int getStock(Product product) {
+        ProductInventory productInv = products.stream().filter(p -> p.getProduct() == product)
+        .findFirst()
+        .get();
+
+        return productInv.getStock();
+    }
+
+
+    public int getPrice(Product product) {
+        ProductInventory productInv = products.stream()
+            .filter(p -> p.getProduct() == product)
+            .findFirst()
+            .get();
+
+        return productInv.getPrice();
     }
 }
