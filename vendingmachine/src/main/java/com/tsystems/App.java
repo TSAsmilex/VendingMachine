@@ -40,6 +40,8 @@ public class App {
     static VendingMachine vendingMachine = new VendingMachine();
 
     public static void main(String[] args) throws Exception {
+        vendingMachine.addInventory(new ProductInventory(Product.NAPIA_COLA, 5, 300));
+
         var       option = MenuOptions.NOOP;
         Scanner   scan   = new Scanner(System.in);
         Exception error  = null;
@@ -94,7 +96,7 @@ public class App {
         System.out.println("¿Qué producto quieres comprar?");
         System.out.println("   1) Plumbus");
         System.out.println("   2) Wumpa");
-        System.out.print("> ");
+        System.out.println("   3) Napia Cola");
 
         Product product = null;
 
@@ -107,7 +109,7 @@ public class App {
             catch (InputMismatchException e) {
                 throw new InputMismatchException("Introduce un comando válido.");
             }
-        } while (product != Product.WUMPA && product != Product.PLUMBUS);
+        } while (product == null);
 
 
         int round     = 0;

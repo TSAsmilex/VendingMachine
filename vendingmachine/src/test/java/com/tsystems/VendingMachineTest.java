@@ -97,4 +97,20 @@ public class VendingMachineTest
         int stock = vendingMachine.getStock(Product.WUMPA);
         assertTrue(stock > 0);
     }
+
+    // ─────────────────────────────────────────────────────────────────────────────
+
+
+    @Test
+    public void whenAddingNewInventory_thenCheckStockIsCorrect () {
+        VendingMachine vendingMachine = new VendingMachine();
+
+        var oldStock = vendingMachine.getStock(Product.PLUMBUS);
+        var newStock = 5;
+        vendingMachine.addInventory(new ProductInventory(Product.PLUMBUS, newStock, 100));
+        var currentStock = vendingMachine.getStock(Product.PLUMBUS);
+
+        assertEquals(oldStock + newStock, currentStock);
+
+    }
 }

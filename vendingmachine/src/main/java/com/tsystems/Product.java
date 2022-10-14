@@ -4,7 +4,8 @@ import java.util.InputMismatchException;
 
 public enum Product {
     PLUMBUS(1),
-    WUMPA(2);
+    WUMPA(2),
+    NAPIA_COLA(3);
 
     private final int value;
 

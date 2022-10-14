@@ -1,6 +1,7 @@
 package com.tsystems;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class VendingMachine {
     private ArrayList<ProductInventory> products = new ArrayList<>();
@@ -63,5 +64,21 @@ public class VendingMachine {
             .get();
 
         return productInv.getPrice();
+    }
+
+    public void addInventory(ProductInventory inv) {
+        // Buscar si lo tienes
+        Optional<ProductInventory> optionalInv = products.stream()
+            .filter(p -> p.getProduct() == inv.getProduct())
+            .findFirst();
+
+        if (optionalInv.isPresent()) {
+            var productInventory = optionalInv.get();
+            productInventory.setStock(productInventory.getStock() + inv.getStock());
+            productInventory.setPrice(inv.getPrice());
+        }
+        else {
+            products.add(inv);
+        }
     }
 }
