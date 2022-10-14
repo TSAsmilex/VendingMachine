@@ -68,6 +68,19 @@ public class VendingMachineTest
         vendingMachine.buy(Product.PLUMBUS, coins);
     }
 
+    @Test
+    public void whenBuyingProduct_thenDecreaseInventory() {
+        VendingMachine vendingMachine = new VendingMachine();
+        ArrayList<CoinEuro> coins = new ArrayList<>();
+        coins.add(CoinEuro.TWO_HUNDRED);
+
+        int oldStock = vendingMachine.getStock(Product.PLUMBUS);
+        vendingMachine.buy(Product.PLUMBUS, coins);
+        int newStock = vendingMachine.getStock(Product.PLUMBUS);
+
+        assertTrue(oldStock - newStock == 1);
+    }
+
     // ─────────────────────────────────────────────────────────────────────────────
 
 
